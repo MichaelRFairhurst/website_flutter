@@ -33,8 +33,10 @@ class HomePageState extends State<HomePage> {
 
   late final VideoPlayerController quicksortVideoController;
   late final VideoPlayerController scrollAnimateVideoController;
+  late final VideoPlayerController climateForestsVideoController;
   late final Future quicksortVideoFuture;
   late final Future scrollAnimateVideoFuture;
+  late final Future climateForestsVideoFuture;
 
   @override
   void initState() {
@@ -44,6 +46,8 @@ class HomePageState extends State<HomePage> {
     quicksortVideoFuture = quicksortVideoController.initialize();
     scrollAnimateVideoController = VideoPlayerController.asset("assets/scroll_animate.mp4");
     scrollAnimateVideoFuture = scrollAnimateVideoController.initialize();
+    climateForestsVideoController = VideoPlayerController.asset("assets/climate_forests_map.mp4");
+    climateForestsVideoFuture = climateForestsVideoController.initialize();
   }
 
   Widget build(BuildContext context) {
@@ -261,12 +265,16 @@ consulting / development / deployment
                 if (scrollAnimateVideoController.value.isInitialized) {
                   scrollAnimateVideoController.play();
                 }
+                if (climateForestsVideoController.value.isInitialized) {
+                  climateForestsVideoController.play();
+                }
               });
             },
             onExit: () {
               setState(() {
                 quicksortVideoController.pause();
                 scrollAnimateVideoController.pause();
+                climateForestsVideoController.pause();
               });
             },
             child: SliverToBoxAdapter(
@@ -309,6 +317,26 @@ consulting / development / deployment
                             return AspectRatio(
                               aspectRatio: scrollAnimateVideoController.value.aspectRatio,
                               child: VideoPlayer(scrollAnimateVideoController),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 50, height: 100),
+                    Flexible(
+                      flex: isLandscape ? 2 : 1,
+                      child: FutureBuilder(
+                        future: climateForestsVideoFuture,
+                        builder: (context, snapshot) {
+	                  if (snapshot.connectionState == ConnectionState.done) {
+                            climateForestsVideoController.setLooping(true);
+                            climateForestsVideoController.setVolume(0);
+             
+                            return AspectRatio(
+                              aspectRatio: climateForestsVideoController.value.aspectRatio,
+                              child: VideoPlayer(climateForestsVideoController),
                             );
                           } else {
                             return Container();
@@ -466,7 +494,7 @@ consulting / development / deployment
               opacity: opacity,
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-                margin: EdgeInsets.only(left: 150, right: 150, bottom: 100, top: 50),
+                margin: EdgeInsets.only(left: 150, right: 150, top: 150),
                 alignment: Alignment.topCenter,
                 color: Colors.black,
                 child: FittedBox(
