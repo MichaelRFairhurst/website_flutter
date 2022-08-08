@@ -58,12 +58,14 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverFreezeAnimation<double>(
+          SliverSuspendedAnimation<double>(
             duration: 500,
             tween: Tween(begin: 120.0, end: 80),
             builder: (context, fontSize) {
-              return AspectRatio(
-                aspectRatio: max(screenSize.width / screenSize.height, 1),
+              return Container(
+                height: screenSize.height,
+                width: screenSize.width,
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: FittedBox(
                   child: Container(
                     width: max(1200, screenSize.width),
@@ -107,7 +109,7 @@ class HomePageState extends State<HomePage> {
               );
             },
           ),
-          SliverFreezeAnimation<double>(
+          SliverSuspendedAnimation<double>(
             duration: 500,
             tween: 
               isLandscape
@@ -178,9 +180,9 @@ consulting / development / deployment
               );
             },
           ),
-          resumeItem("Facebook (2020-2021)", "Senior Software Engineer", screenSize),
-          resumeItem("Google (2016-2020)", "Software Engineer, Official Dart/Flutter Analyzer", screenSize),
-          resumeItem("... (2011-2016)", "Sprinklr, Postano, Manifest Web Design, Cinder, MediPro Direct", screenSize),
+          resumeItem("Facebook (2020-2021)", "Senior Software Engineer", screenSize, isLandscape),
+          resumeItem("Google (2016-2020)", "Software Engineer, Official Dart/Flutter Analyzer", screenSize, isLandscape),
+          resumeItem("... (2011-2016)", "Sprinklr, Postano, Manifest Web Design, Cinder, MediPro Direct", screenSize, isLandscape),
           SliverParallax(
             center: ParallaxScrollCenter.relativePx(400),
             mainAxisFactor: 0.8,
@@ -203,7 +205,7 @@ consulting / development / deployment
               ),
             ),
           ),
-          SliverFreezeAnimation<double>(
+          SliverSuspendedAnimation<double>(
             tween: Tween(begin: 0.0, end: min(screenSize.width / 8, 120)),
             duration: 400,
             builder: (context, borderThickness) {
@@ -238,7 +240,7 @@ consulting / development / deployment
             curve: Curves.ease,
             entrancePolicy: EntrancePolicy.scrollBeyondBottomEdge(),
             builder: (context, opacity, _) {
-              return SliverToBoxAdapter(child: Container(
+              return Container(
                 color: Colors.black,
                 padding: EdgeInsets.symmetric(vertical:50),
                 alignment: Alignment.topCenter,
@@ -253,7 +255,7 @@ consulting / development / deployment
                     ),
                   ),
                 ),
-              ));
+              );
             },
           ),
           SliverEnterExitCallback(
@@ -277,82 +279,80 @@ consulting / development / deployment
                 climateForestsVideoController.pause();
               });
             },
-            child: SliverToBoxAdapter(
-              child: Container(
-                color: Colors.black,
-                padding: EdgeInsets.all(50),
-                height: isLandscape ? screenSize.height - 150 : screenSize.height * 2,
-                child: Flex(
-                  direction: isLandscape ? Axis.horizontal : Axis.vertical,
-                  children: <Widget>[
-                    Flexible(
-                      flex: isLandscape ? 2 : 1,
-                      child: FutureBuilder(
-                        future: quicksortVideoFuture,
-                        builder: (context, snapshot) {
-	                  if (snapshot.connectionState == ConnectionState.done) {
-                            quicksortVideoController.setLooping(true);
-                            quicksortVideoController.setVolume(0);
+            child: Container(
+              color: Colors.black,
+              padding: EdgeInsets.all(50),
+              height: isLandscape ? screenSize.height - 150 : screenSize.height * 2,
+              child: Flex(
+                direction: isLandscape ? Axis.horizontal : Axis.vertical,
+                children: <Widget>[
+                  Flexible(
+                    flex: isLandscape ? 2 : 1,
+                    child: FutureBuilder(
+                      future: quicksortVideoFuture,
+                      builder: (context, snapshot) {
+	                if (snapshot.connectionState == ConnectionState.done) {
+                          quicksortVideoController.setLooping(true);
+                          quicksortVideoController.setVolume(0);
              
-                            return AspectRatio(
-                              aspectRatio: quicksortVideoController.value.aspectRatio,
-                              child: VideoPlayer(quicksortVideoController),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
+                          return AspectRatio(
+                            aspectRatio: quicksortVideoController.value.aspectRatio,
+                            child: VideoPlayer(quicksortVideoController),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
                     ),
-                    SizedBox(width: 50, height: 100),
-                    Flexible(
-                      flex: isLandscape ? 1 : 2,
-                      child: FutureBuilder(
-                        future: scrollAnimateVideoFuture,
-                        builder: (context, snapshot) {
-	                  if (snapshot.connectionState == ConnectionState.done) {
-                            scrollAnimateVideoController.setLooping(true);
-                            scrollAnimateVideoController.setVolume(0);
+                  ),
+                  SizedBox(width: 50, height: 100),
+                  Flexible(
+                    flex: isLandscape ? 1 : 2,
+                    child: FutureBuilder(
+                      future: scrollAnimateVideoFuture,
+                      builder: (context, snapshot) {
+	                if (snapshot.connectionState == ConnectionState.done) {
+                          scrollAnimateVideoController.setLooping(true);
+                          scrollAnimateVideoController.setVolume(0);
              
-                            return AspectRatio(
-                              aspectRatio: scrollAnimateVideoController.value.aspectRatio,
-                              child: VideoPlayer(scrollAnimateVideoController),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
+                          return AspectRatio(
+                            aspectRatio: scrollAnimateVideoController.value.aspectRatio,
+                            child: VideoPlayer(scrollAnimateVideoController),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
                     ),
-                    SizedBox(width: 50, height: 100),
-                    Flexible(
-                      flex: isLandscape ? 2 : 1,
-                      child: FutureBuilder(
-                        future: climateForestsVideoFuture,
-                        builder: (context, snapshot) {
-	                  if (snapshot.connectionState == ConnectionState.done) {
-                            climateForestsVideoController.setLooping(true);
-                            climateForestsVideoController.setVolume(0);
+                  ),
+                  SizedBox(width: 50, height: 100),
+                  Flexible(
+                    flex: isLandscape ? 2 : 1,
+                    child: FutureBuilder(
+                      future: climateForestsVideoFuture,
+                      builder: (context, snapshot) {
+	                if (snapshot.connectionState == ConnectionState.done) {
+                          climateForestsVideoController.setLooping(true);
+                          climateForestsVideoController.setVolume(0);
              
-                            return AspectRatio(
-                              aspectRatio: climateForestsVideoController.value.aspectRatio,
-                              child: VideoPlayer(climateForestsVideoController),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
+                          return AspectRatio(
+                            aspectRatio: climateForestsVideoController.value.aspectRatio,
+                            child: VideoPlayer(climateForestsVideoController),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
                     ),
-                    SizedBox(width: 50, height: 100),
-                    Flexible(
-                      flex: isLandscape ? 1 : 2,
-                      child: Image.asset(
-                        "assets/oiltracker.jpg",
-                      ),
+                  ),
+                  SizedBox(width: 50, height: 100),
+                  Flexible(
+                    flex: isLandscape ? 1 : 2,
+                    child: Image.asset(
+                      "assets/oiltracker.jpg",
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -431,7 +431,7 @@ consulting / development / deployment
               width: screenSize.width,
               child: Image.asset(
                 "assets/mike_wallie.jpeg",
-                alignment: Alignment.topRight,
+                alignment: Alignment(0.72, -1.0),
                 fit: BoxFit.cover
               ),
             ),
@@ -480,40 +480,38 @@ consulting / development / deployment
     }).toList();
   }
 
-  Widget resumeItem(String header, String subheader, Size screenSize) =>
+  Widget resumeItem(String header, String subheader, Size screenSize, isLandscape) =>
     SliverEntranceAnimation<double>(
       duration: const Duration(seconds: 1),
       curve: Curves.ease,
       tween: Tween(begin: 0.0, end: 1.0),
       entrancePolicy: EntrancePolicy.scrollBeyondBottomEdge(),
       builder: (context, opacity, _) {
-        return SliverToBoxAdapter(
-          child: Transform.translate(
-            offset: Offset(-screenSize.width, 0) * (1 - opacity),
-            child: Opacity(
-              opacity: opacity,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-                margin: EdgeInsets.only(left: 150, right: 150, top: 150),
-                alignment: Alignment.topCenter,
-                color: Colors.black,
-                child: FittedBox(
-                  child: SelectableText.rich(
-                    TextSpan(
-                      text: header + "\n",
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: subheader,
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontFamily: 'Playfair',
-                    ),
+        return Transform.translate(
+          offset: Offset(-screenSize.width, 0) * (1 - opacity),
+          child: Opacity(
+            opacity: opacity,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+              margin: isLandscape ? EdgeInsets.only(left: 150, right: 150, top: 150) : EdgeInsets.all(50),
+              alignment: Alignment.topCenter,
+              color: Colors.black,
+              child: FittedBox(
+                child: SelectableText.rich(
+                  TextSpan(
+                    text: header + "\n",
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: subheader,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontFamily: 'Playfair',
                   ),
                 ),
               ),
